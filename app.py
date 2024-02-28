@@ -40,27 +40,32 @@ def create_user():
     first_name= request.form['first_name']
     last_name= request.form['last_name']
     image_url= request.form['image_url']
+
+    new_user= User(first_name=first_name, last_name=last_name, image_url=image_url)
+    db.session.add(new_user)
+    db.session.commit()
+
     return redirect ('/users')
 
-@app.route('/users/<user-id>')
-def show_user(user-id):
+@app.route('/users/<user_id>')
+def show_user(user_id):
     """shows details on individual user"""
-    user = User.query.get_or_404(user-id)
+    user = User.query.get_or_404(user_id)
     return render_template ('userdetail.html', user=user)
 
-@app.route('/users/<user-id>/edit')
-def show_edit_form(user-id):
+@app.route('/users/<user_id>/edit')
+def show_edit_form(user_id):
     """shows edit form"""
-    user = User.query.get_or_404(user-id)
+    user = User.query.get_or_404(user_id)
     return render_template ('useredit.html', user=user)
 
-@app.route('/users/<user-id>/edit', methods['POST'])
+@app.route('/users/<user_id>/edit', methods=['POST'])
 def update_edit_form():
     """updates a user"""
     
     return redirect ('/users')   
 
-@app.route('/users/[user-id]/delete', methods['POST'])
+@app.route('/users/[user-id]/delete', methods=['POST'])
 def delete_user():
     """updates a user"""
     
