@@ -65,7 +65,7 @@ def update_edit_form():
     
     return redirect ('/users')   
 
-@app.route('/users/[user-id]/delete', methods=['POST'])
+@app.route('/users/[user_id]/delete', methods=['POST'])
 def delete_user():
     """updates a user"""
     
