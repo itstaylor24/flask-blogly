@@ -1,13 +1,31 @@
 {% extends 'base.html' %} {% block title %}Create User{% endblock %} {% block
 content %}
 <h1>Create User</h1>
-<form action="/" method="POST">
-  <label for="first_name">First Name</label
-  ><input type="text" name="first_name" placeholder=" first name" />
-  <label for="last_name">Last Name</label
-  ><input type="text" name="last_name" placeholder="last name" />
-  <label for="image_url">Image URL</label
-  ><input type="text" name="image_url" placeholder="provide url to image" />
+<form action="/users/new" method="POST">
+  <label for="first_name" class="col-sm-2 col-form-label">First Name</label
+  ><input
+    type="text"
+    name="first_name"
+    id="first_name"
+    placeholder=" first name"
+    class="form-control"
+  />
+  <label for="last_name" id="last_name">Last Name</label
+  ><input
+    type="text"
+    name="last_name"
+    placeholder="last name"
+    class="form-control"
+  />
+  <label for="image_url" id="image_url">Image URL</label
+  ><input
+    type="text"
+    name="image_url"
+    placeholder="provide url to image"
+    class="form-control"
+  />
   <button>Create User</button>
 </form>
 {% endblock %}
+<!-- Why provide id here if no JS and
+   already have class and name? -->

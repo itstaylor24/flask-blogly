@@ -1,6 +1,6 @@
 """Blogly application."""
 
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, url_for
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
 
@@ -13,60 +13,68 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
 connect_db(app)
-
+with app.app_context():
+ db.create_all()
 @app.route('/')
 def list_users():
     """Shows list of all users"""
     users = User.query.all()
-    return render_template('userlist.html', users=users)
+    return redirect('/users')
 
 @app.route('/users')
-def list_users():
+def list_users2():
     """Shows list of all users"""
-    users = User.query.all()
+    users = User.query.order_by(User.last_name, User.first_name).all()
     return render_template('userlist.html', users=users)
 
-@app.route('/users/new')
-def show_create_form():
-    """Shows form to create a user"""
 
-    
-    return render_template('createuser.html')
-
-@app.route('/users/new', methods=["POST"])
+@app.route('/users/new', methods=["GET","POST"])
 def create_user():
     """Creates a User"""
-    
-    first_name= request.form['first_name']
-    last_name= request.form['last_name']
-    image_url= request.form['image_url']
+    if request.method =="POST":
 
-    new_user= User(first_name=first_name, last_name=last_name, image_url=image_url)
-    db.session.add(new_user)
-    db.session.commit()
+        new_user = User(
+            first_name=request.form['first_name'],
+            last_name=request.form['last_name'],
+            image_url=request.form['image_url'] or None)
+        
+        db.session.add(new_user)
+        db.session.commit()
 
-    return redirect ('/users')
+        return redirect (url_for('list_users2'))
+    return render_template('createuser.html')
 
-@app.route('/users/<user_id>')
+@app.route('/users/<int:user_id>')
 def show_user(user_id):
     """shows details on individual user"""
     user = User.query.get_or_404(user_id)
-    return render_template ('userdetail.html', user=user)
+    return render_template('userdetails.html', user=user)
 
-@app.route('/users/<user_id>/edit')
+@app.route('/users/<int:user_id>/edit')
 def show_edit_form(user_id):
     """shows edit form"""
     user = User.query.get_or_404(user_id)
     return render_template ('useredit.html', user=user)
 
-@app.route('/users/<user_id>/edit', methods=['POST'])
-def update_edit_form():
+@app.route('/users/<int:user_id>/edit',  methods = ["GET", "POST"])
+def update_edit_form(user_id):
     """updates a user"""
-    
-    return redirect ('/users')   
+    if request.method =="POST":
+        user = User.query.get_or_404(user_id)
+        user.first_name = request.form['first_name']
+        user.last_name = request.form['last_name']
+        user.image_url = request.form['image_url']
 
-@app.route('/users/[user_id]/delete', methods=['POST'])
-def delete_user():
-    """updates a user"""
-    
+    db.session.add(user)
+    db.session.commit()
+
+    return redirect("/users")
+     
+
+@app.route('/users/<int:user_id>/delete', methods=['POST'])
+def delete_user(user_id):
+    """deletes a user"""
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
     return redirect ('/users')  

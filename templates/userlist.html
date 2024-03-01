@@ -3,10 +3,12 @@ content %}
 <h1>User Listing</h1>
 <ul>
   {% for user in users %}
-  <li><a href="/users/<int:user_id>">{{user.first_name}}{{user.last_name}}</a></li>
+  <li>
+    <a href="/users/{{user.id}}">{{user.first_name}} {{user.last_name}}</a>
+  </li>
   {% endfor %}
 </ul>
 
-<a href="/users/new"></a>
+<p><a class="btn btn-sm btn-secondary" href="/users/new"></a></p>
 
 {% endblock %}
