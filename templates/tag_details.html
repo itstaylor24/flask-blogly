@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block title %}Tag Details{% endblock %} {% block
+content %}
+<h1>Tag Details Page</h1>
+<div class="row">
+  <h2>{{tag.name}}</h2>
+</div>
+{% for post in tag.posts %}
+<h2 class="mt-4">
+  <a href="/posts/{{ post.id }}">{{post.title}}</a>
+</h2>
+<form>
+  <button
+    formmethod="GET"
+    formaction="/tags/{{ tag.id }}/edit"
+    class="btn btn-primary"
+  >
+    Edit
+  </button>
+  <button
+    formmethod="POST"
+    formaction="/tags/{{ tag.id }}/delete"
+    class="btn btn-danger"
+  >
+    Delete
+  </button>
+</form>
+<!-- In HTML, the formaction attribute is 
+specific to <button> elements within
+   a <form> element. It allows you to override 
+    the default form action URL
+   specified in the <form> tag. -->
+    <!-- When you specify the formmethod attribute on a
+     button within a form, it allows you to override 
+     the form's method attribute temporarily for that
+      specific button. This means that
+       when that particular button is clicked,
+        it will use the HTTP method specified
+         in the formmethod attribute
+          instead of the default method
+           specified in the <form> tag. -->
+
+{% endfor %} {% endblock %}
